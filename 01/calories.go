@@ -17,6 +17,7 @@ func main() {
 	}
 	defer file.Close()
 
+	fmt.Println(calculateTopCalories(file))
 	fmt.Println(calculateTop3Calories(file))
 }
 
