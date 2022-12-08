@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	file, _ := os.ReadFile("04/input2.txt")
+	file, _ := os.ReadFile("./input2.txt")
 
 	split := strings.Split(string(file), "\n")
 

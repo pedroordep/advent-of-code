@@ -14,7 +14,7 @@ const (
 )
 
 func main() {
-	file, _ := os.ReadFile("08/input2.txt")
+	file, _ := os.ReadFile("./input2.txt")
 
 	split := strings.Split(string(file), "\n")
 

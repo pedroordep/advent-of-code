@@ -17,7 +17,7 @@ var paper *Shape
 var scissors *Shape
 
 func main() {
-	file, err := os.ReadFile("02/input2.txt")
+	file, err := os.ReadFile("./input2.txt")
 	if err != nil {
 		panic(err)
 	}

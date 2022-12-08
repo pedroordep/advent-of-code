@@ -9,7 +9,7 @@ import (
 const forbiddenChars = "123456789"
 
 func main() {
-	file, _ := os.ReadFile("05/input2.txt")
+	file, _ := os.ReadFile("./input2.txt")
 
 	split := strings.Split(string(file), "\n")
 

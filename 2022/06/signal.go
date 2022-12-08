@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	file, _ := os.ReadFile("06/input2.txt")
+	file, _ := os.ReadFile("./input2.txt")
 
 	fmt.Println("part 1:", checkNonRepeatedCharIndex(file, 4))
 	fmt.Println("part 2:", checkNonRepeatedCharIndex(file, 14))
