@@ -88,7 +88,7 @@ func removeElsAtIndex(input *[]string, index int, maintainHighest bool) {
 
 func getBinaryValue(input string) int {
 	sum := 0
-	for i, _ := range input {
+	for i := range input {
 		if input[i] == '1' {
 			sum += int(math.Pow(2, float64(len(input)-i-1)))
 		}
