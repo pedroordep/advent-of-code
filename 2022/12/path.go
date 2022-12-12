@@ -15,19 +15,34 @@ func main() {
 	file, _ := os.ReadFile("./input2.txt")
 	maze := strings.Split(string(file), "\n")
 
-	graph, start, end := parseInput(maze)
-	fmt.Println(graph)
-	path, _ := ShortestPath(start, end)
-	// fmt.Println(path, len(path)-1)
+	_, start, end, starts := parseInput(maze)
 
+	path, _ := ShortestPath(start, end)
 	fmt.Println("part 1:", len(path)-1)
+
+	fmt.Println("part 2:", minOfMultiplePaths(starts, end))
 }
 
-func parseInput(maze []string) (graph []Node, start, end Node) {
+func minOfMultiplePaths(starts []Node, end Node) int {
+	min := 999999
+	for _, start := range starts {
+		path, err := ShortestPath(start, end)
+		if err != nil {
+			continue
+		}
+		if len(path) < min {
+			min = len(path)
+		}
+	}
+	return min - 1
+}
+
+func parseInput(maze []string) (graph []Node, start, end Node, starts []Node) {
 	graph = []Node{}
 	boundaries := image.Rect(0, 0, len(maze[0]), len(maze))
 	moves := []image.Point{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}
 	vertexes := map[image.Point]*Vertex{}
+	starts = []Node{}
 
 	for y := 0; y < len(maze); y++ {
 		for x := 0; x < len(maze[y]); x++ {
@@ -37,8 +52,12 @@ func parseInput(maze []string) (graph []Node, start, end Node) {
 
 			if maze[y][x] == 'S' {
 				start = v
+				starts = append(starts, v)
 			} else if maze[y][x] == 'E' {
 				end = v
+			}
+			if maze[y][x] == 'a' {
+				starts = append(starts, v)
 			}
 		}
 	}
@@ -69,7 +88,7 @@ func parseInput(maze []string) (graph []Node, start, end Node) {
 		}
 	}
 
-	return graph, start, end
+	return graph, start, end, starts
 }
 
 // Node is an interface for your own implementation of a vertex in a graph.
