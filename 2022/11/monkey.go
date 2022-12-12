@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/big"
 	"os"
 	"sort"
 	"strconv"
@@ -15,25 +16,30 @@ const (
 
 type Monkey struct {
 	id        int
-	items     []int
+	items     []*big.Int
 	op        int
-	opTerm    int // 0 means the old param
+	opTerm    *big.Int // 0 means the old param
 	testDiv   int
 	testTrue  int
 	testFalse int
 }
 
+var lowestDivValue int64 = 1
+
 func main() {
-	file, _ := os.ReadFile("./input1.txt")
+	file, _ := os.ReadFile("./input2.txt")
 	split := strings.Split(string(file), "\n\n")
 
 	monkeys := parseMonkeys(split)
-	// fmt.Println(monkeys)
 	monkeyInspections := calculateInspections(monkeys, 20, true)
+
+	monkeys = parseMonkeys(split)
 	monkeyInspections2 := calculateInspections(monkeys, 10000, false)
 
 	fmt.Println("part 1", monkeyInspections)
 	fmt.Println("part 2", monkeyInspections2)
+
+	// fmt.Println(big.NewInt(lowestDivValue), big.NewInt(0).Mul(big.NewInt(lowestDivValue), big.NewInt(lowestDivValue)))
 }
 
 func calculateInspections(monkeys []*Monkey, rounds int, worryLvlChange bool) int {
@@ -45,44 +51,51 @@ func calculateInspections(monkeys []*Monkey, rounds int, worryLvlChange bool) in
 				continue
 			}
 
-			itemsCp := make([]int, len(monkeys[i].items))
-			copy(itemsCp, monkeys[i].items)
-
-			for _, item := range itemsCp {
+			for _, item := range monkeys[i].items {
 				// inspect
 				monkeyInspections[i]++
+				// fmt.Printf("[%d]Monkey inspects an item with a worry level of %d.\n", i, item)
 
 				// worry level calc
-				worryLvl, term := 0, 0
-				if monkeys[i].opTerm == 0 {
-					term = item
+				worryLvl := big.NewInt(0)
+				term := big.NewInt(0)
+				if monkeys[i].opTerm.Cmp(big.NewInt(0)) == 0 {
+					term.Set(item)
 				} else {
-					term = monkeys[i].opTerm
+					term.Set(monkeys[i].opTerm)
 				}
 				if monkeys[i].op == opMult {
-					worryLvl = item * term
+					worryLvl.Mul(item, term)
+					// fmt.Printf("[%d]  Worry level is multiplied by %d to %d.\n", i, term, worryLvl)
 				} else {
-					worryLvl = item + term
+					worryLvl.Add(item, term)
+					// fmt.Printf("[%d]  Worry level is added by %d to %d.\n", i, term, worryLvl)
 				}
 
 				// bored
 				if worryLvlChange {
-					worryLvl = worryLvl / 3
+					worryLvl.Div(worryLvl, big.NewInt(3))
+					// fmt.Printf("[%d]  Monkey gets bored with item. Worry level is divided by 3 to %d.\n", i, worryLvl)
 				}
 
+				// reset to %lowestDivValue
+				worryLvl.Mod(worryLvl, big.NewInt(lowestDivValue))
+
 				// throw item
-				if worryLvl%monkeys[i].testDiv == 0 {
+				if big.NewInt(0).Mod(worryLvl, big.NewInt(int64(monkeys[i].testDiv))).Cmp(big.NewInt(0)) == 0 {
 					monkeys[monkeys[i].testTrue].items = append(monkeys[monkeys[i].testTrue].items, worryLvl)
+					// fmt.Printf("[%d]    Item with worry level %d is thrown to monkey %d.\n", i, worryLvl, monkeys[i].testTrue)
 				} else {
 					monkeys[monkeys[i].testFalse].items = append(monkeys[monkeys[i].testFalse].items, worryLvl)
+					// fmt.Printf("[%d]    Item with worry level %d is thrown to monkey %d.\n", i, worryLvl, monkeys[i].testFalse)
 				}
-				monkeys[i].items = monkeys[i].items[1:]
 			}
+			monkeys[i].items = nil
 		}
 	}
 
 	sort.Ints(monkeyInspections)
-	fmt.Println(monkeyInspections)
+	// fmt.Println(monkeyInspections)
 
 	return monkeyInspections[len(monkeyInspections)-1] * monkeyInspections[len(monkeyInspections)-2]
 }
@@ -93,14 +106,14 @@ func parseMonkeys(input []string) []*Monkey {
 		lines := strings.Split(input[i], "\n")
 		monkey := &Monkey{
 			id:    i,
-			items: make([]int, 0),
+			items: make([]*big.Int, 0),
 		}
 
 		// starting items
 		itemList := strings.Split(strings.TrimPrefix(lines[1], "  Starting items: "), ", ")
 		for _, item := range itemList {
 			val, _ := strconv.Atoi(item)
-			monkey.items = append(monkey.items, val)
+			monkey.items = append(monkey.items, big.NewInt(int64(val)))
 		}
 
 		// operation
@@ -110,12 +123,15 @@ func parseMonkeys(input []string) []*Monkey {
 		} else {
 			monkey.op = opAdd
 		}
-		fmt.Sscanf(opList[1:], " %d", &monkey.opTerm)
+		var opTerm int64
+		fmt.Sscanf(opList[2:], "%d", &opTerm)
+		monkey.opTerm = big.NewInt(opTerm)
 
 		// test
 		fmt.Sscanf(lines[3], "  Test: divisible by %d", &monkey.testDiv)
 		fmt.Sscanf(lines[4], "    If true: throw to monkey %d", &monkey.testTrue)
 		fmt.Sscanf(lines[5], "    If false: throw to monkey %d", &monkey.testFalse)
+		lowestDivValue *= int64(monkey.testDiv)
 
 		monkeys = append(monkeys, monkey)
 	}
