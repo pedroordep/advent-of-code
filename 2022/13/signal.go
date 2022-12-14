@@ -51,14 +51,7 @@ func part1(split []string) int {
 		pairs := strings.Split(pair, "\n")
 
 		first := parseNode(pairs[0])
-
 		second := parseNode(pairs[1])
-
-		// var first []any
-		// json.Unmarshal([]byte(pairs[0]), &first)
-
-		// var second []any
-		// json.Unmarshal([]byte(pairs[1]), &second)
 
 		val := compareNodes(first, second)
 		// fmt.Println("Comparing", i+1)
@@ -85,69 +78,6 @@ func part2(split []string) int {
 
 	return (nodes.IndexOf(node1) + 1) * (nodes.IndexOf(node2) + 1)
 }
-
-// -1 if first comes first
-// 0 if equal
-// 1 if second comes first
-// func compareInputs(first, second any) int {
-// 	fmt.Println(first, reflect.TypeOf(first), second, reflect.TypeOf(second))
-// 	switch firstT := first.(type) {
-// 	case float64:
-// 		switch secondT := second.(type) {
-// 		case float64:
-// 			if firstT < secondT {
-// 				return -1
-// 			} else if firstT == second.(float64) {
-// 				return 0
-// 			} else {
-// 				return 1
-// 			}
-// 		case []float64:
-// 			return compareInputs([]float64{firstT}, secondT)
-// 		}
-// 	case []float64:
-// 		switch secondT := second.(type) {
-// 		case float64:
-// 			return compareInputs(firstT, []float64{secondT})
-// 		case []float64:
-// 			for i := 0; i < len(firstT); i++ {
-// 				if i == len(secondT) {
-// 					return 1
-// 				}
-// 				val := compareInputs(firstT[i], secondT[i])
-// 				if val != 0 {
-// 					return val
-// 				}
-// 			}
-// 			return 0
-// 		}
-// 	case []interface{}:
-// 		switch secondT := second.(type) {
-// 		case []interface{}:
-// 			for i := 0; i < len(firstT); i++ {
-// 				if i == len(secondT) {
-// 					return 1
-// 				}
-// 				val := compareInputs(firstT[i].([]float64), secondT[i].([]float64))
-// 				if val != 0 {
-// 					return val
-// 				}
-// 			}
-// 		case interface{}:
-// 			return compareInputs(firstT, secondT)
-// 		}
-// 		return 0
-// 	case interface{}:
-// 		switch secondT := second.(type) {
-// 		case []interface{}:
-// 			return compareInputs([]interface{}{firstT}, secondT)
-// 		case interface{}:
-// 			return compareInputs(firstT, secondT)
-// 		}
-// 		return 0
-// 	}
-// 	return 0
-// }
 
 // -1 if first comes first
 // 0 if equal
