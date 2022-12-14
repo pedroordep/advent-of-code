@@ -70,8 +70,8 @@ func part2(sandMap map[image.Point]struct{}) int {
 			stalePoints++
 			cur = start
 		}
-		_, a := sandMap[start]
-		if a {
+		_, exists := sandMap[start]
+		if exists {
 			break
 		}
 	}
