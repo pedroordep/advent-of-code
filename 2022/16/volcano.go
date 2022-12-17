@@ -37,7 +37,36 @@ func main() {
 	fmt.Println(valves)
 
 	fmt.Println("part 1:", bestPath(root, nil, 30, 0, []string{}))
+	// fmt.Println("part 2:", bestPathForBoth(root, nil, nil, nil, 0, 0, 30, 0, []string{}, []string{}))
 }
+
+// func bestPathForBoth(cur, el *Valve, con, conEl *Connection, curWait, elWait int, minutes, score int, path, pathEl []string) int {
+// 	// fmt.Println(path, len(path), minutes, bestGlobal)
+// 	bestLocal := 0
+// 	// curPathing, elPathing := false, false
+
+// 	score += sumScores()
+// 	minutes -= 1
+// 	if con != nil && curWait < con.minutes && minutes > 0 {
+// 		curWait++
+// 		// curPathing = true
+// 	}
+// 	if conEl != nil && elWait < conEl.minutes && minutes > 0 {
+// 		elWait++
+// 		// elPathing = true
+// 	}
+// }
+
+// func pathsToTake(cur *Valve, con *Connection, curWait int) (*Valve, *Connection, int) {
+// 	if con != nil && curWait < con.minutes {
+// 		return cur, con, curWait
+// 	} else if con != nil && curWait >= con.minutes {
+
+// 		return cur, nil, 0
+// 	} else {
+// 		return nil, nil, 0
+// 	}
+// }
 
 func bestPath(cur *Valve, con *Connection, minutes, score int, path []string) int {
 	// fmt.Println(path, len(path), minutes, bestGlobal)
