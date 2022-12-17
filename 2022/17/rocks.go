@@ -4,10 +4,14 @@ import (
 	"fmt"
 	"image"
 	"os"
+	"strconv"
 )
 
 type Rock []image.Point
-type Cave [10000][7]int
+type Cave [7]int
+type CaveHistory map[Cave]struct{}
+
+// var history CaveHistory = CaveHistory{}
 
 func (r Rock) Move(p image.Point) {
 	for i := 0; i < len(r); i++ {
@@ -17,10 +21,10 @@ func (r Rock) Move(p image.Point) {
 
 func (r Rock) hasClonflict(c Cave) bool {
 	for i := 0; i < len(r); i++ {
-		if r[i].X < 0 || r[i].X > len(c[0])-1 {
+		if r[i].X < 0 || r[i].X > len(c)-1 {
 			return true
 		}
-		if c[r[i].Y][r[i].X] > 0 {
+		if c[r[i].X] >= r[i].Y {
 			return true
 		}
 	}
@@ -29,44 +33,24 @@ func (r Rock) hasClonflict(c Cave) bool {
 
 func (c *Cave) Update(r Rock) {
 	for i := 0; i < len(r); i++ {
-		c[r[i].Y][r[i].X] = 1
+		c[r[i].X] = r[i].Y
 	}
 }
 
 func (c *Cave) GetHighestY(r Rock) int {
-	highestY := r[0].Y
-	for i := highestY; i < len(c); i++ {
-		foundHigher := false
-		for x := 0; x < len(c[i]); x++ {
-			if c[i][x] > 0 {
-				highestY = i
-				foundHigher = true
-				break
-			}
-		}
-		if !foundHigher {
-			break
+	highestY := 0
+	for i := 0; i < len(c); i++ {
+		if c[i] > highestY {
+			highestY = c[i]
 		}
 	}
 	return highestY
 }
 
 func (c Cave) String() string {
-	highestY := c.GetHighestY([]image.Point{{0, 0}})
 	str := ""
-	for i := highestY; i >= 0; i-- {
-		str += "|"
-		for x := 0; x < len(c[i]); x++ {
-			switch c[i][x] {
-			case 0:
-				str += "."
-			case 1:
-				str += "#"
-			case 2:
-				str += "-"
-			}
-		}
-		str += "|\n"
+	for i := 0; i < len(c); i++ {
+		str += strconv.Itoa(c[i]) + " "
 	}
 	return str
 }
@@ -87,9 +71,6 @@ func main() {
 
 func part1(rocks []Rock, moves string, n int) int {
 	cave := Cave{}
-	for i := 0; i < 7; i++ {
-		cave[0][i] = 2
-	}
 	highestY := 0
 
 	j := 0
