@@ -27,7 +27,6 @@ var bestGlobal int = 0
 var maxScorePerTurn int = 0
 var valves ValveMap
 var valvesOpened ValveSet
-var closestDistances map[*Valve]int
 
 func main() {
 	file, _ := os.ReadFile("./input2.txt")
@@ -36,8 +35,6 @@ func main() {
 
 	// printValves(valves)
 	fmt.Println(valves)
-	closestDistances = Dijkstra(root, true)
-	// fmt.Println(closestDistances)
 
 	fmt.Println("part 1:", bestPath(root, nil, 30, 0, []string{}))
 }
@@ -199,7 +196,7 @@ func Dijkstra(start *Valve, withWeights bool) map[*Valve]int {
 
 		sptSet[u] = true
 
-		for v, _ := range dist {
+		for v := range dist {
 			if !withWeights {
 				if !sptSet[v] && u.connectsTo(v) && dist[u] != math.MaxInt32 && dist[u]+1 < dist[v] {
 					dist[v] = dist[u] + 1
@@ -247,15 +244,15 @@ func minDistance(dist map[*Valve]int, sptSet map[*Valve]bool) *Valve {
 	return minValve
 }
 
-func printValves(valves ValveMap) {
-	for _, valve := range valves {
-		conStr := []string{}
-		for _, vc := range valve.connections {
-			conStr = append(conStr, vc.id)
-		}
-		fmt.Printf("Valve %s has flow rate=%d (%v); tunnels lead to valves %s\n", valve.id, valve.flow, valve.isOpen, strings.Join(conStr, ", "))
-	}
-}
+// func printValves(valves ValveMap) {
+// 	for _, valve := range valves {
+// 		conStr := []string{}
+// 		for _, vc := range valve.connections {
+// 			conStr = append(conStr, vc.id)
+// 		}
+// 		fmt.Printf("Valve %s has flow rate=%d (%v); tunnels lead to valves %s\n", valve.id, valve.flow, valve.isOpen, strings.Join(conStr, ", "))
+// 	}
+// }
 
 func (v *Valve) String() string {
 	return fmt.Sprintf("{id: %s, flow: %d, isOpen: %t, %v}", v.id, v.flow, v.isOpen, v.directCons)
