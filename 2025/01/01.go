@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pedroordep/advent-of-code-2022/2025/utils"
+	"github.com/pedroordep/advent-of-code/2025/utils"
 )
 
 var debug = false
