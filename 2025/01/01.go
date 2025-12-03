@@ -12,10 +12,10 @@ import (
 var debug = false
 
 func main() {
-	input1, _ := os.ReadFile("input1.txt")
+	input, _ := os.ReadFile("input.txt")
 
-	fmt.Println("Part 1", Part1(strings.Trim(string(input1), "\n")))
-	fmt.Println("Part 2", Part2(strings.Trim(string(input1), "\n")))
+	fmt.Println("Part 1", Part1(strings.Trim(string(input), "\n")))
+	fmt.Println("Part 2", Part2(strings.Trim(string(input), "\n")))
 }
 
 func Part1(input string) int {
