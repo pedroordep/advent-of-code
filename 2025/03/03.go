@@ -3,17 +3,14 @@ package main
 import (
 	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 
-	"github.com/pedroordep/advent-of-code/2025/utils"
+	"github.com/pedroordep/advent-of-code/utils"
 )
 
-var debug = false
-
 func main() {
-	input, _ := os.ReadFile("input.txt")
+	input := utils.GetInputFile(2025, 3)
 
 	fmt.Println("Part 1", Part1(strings.Trim(string(input), "\n")))
 	fmt.Println("Part 2", Part2(strings.Trim(string(input), "\n")))
@@ -43,7 +40,7 @@ func Part1(input string) int {
 			}
 		}
 
-		utils.Debug(debug, "Found first", first, "and second", second)
+		// fmt.Println("Found first", first, "and second", second)
 		sum += first*10 + second
 	}
 
@@ -65,15 +62,15 @@ func Part2(input string) int64 {
 					highest = value
 					startingIndex = j + 1
 
-					utils.Debug(debug, "highest is", highest, "should start looking from", startingIndex, "on substring", bank[startingIndex:])
+					// fmt.Println("highest is", highest, "should start looking from", startingIndex, "on substring", bank[startingIndex:])
 				}
 			}
 
 			result += highest * int64(math.Pow10(i))
-			utils.Debug(debug, "result for bank is", highest, "*", int64(math.Pow10(i)), "=", result)
+			// fmt.Println("result for bank is", highest, "*", int64(math.Pow10(i)), "=", result)
 		}
 
-		utils.Debug(debug, "Result is", result)
+		// fmt.Println("Result is", result)
 		sum += result
 	}
 

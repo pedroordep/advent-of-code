@@ -2,18 +2,15 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
 
-	"github.com/pedroordep/advent-of-code/2025/utils"
+	"github.com/pedroordep/advent-of-code/utils"
 )
 
-var debug = false
-
 func main() {
-	input, _ := os.ReadFile("input.txt")
+	input := utils.GetInputFile(2025, 2)
 
 	fmt.Println("Part 1", Part1(strings.Trim(string(input), "\n")))
 	fmt.Println("Part 2", Part2(strings.Trim(string(input), "\n")))
@@ -32,7 +29,7 @@ func Part1(input string) int {
 			value := strconv.Itoa(i)
 
 			if value[:len(value)/2] == value[len(value)/2:] {
-				utils.Debug(debug, "Found", value)
+				// fmt.Println("Found", value)
 				sum += i
 			}
 		}
@@ -59,17 +56,17 @@ func Part2(input string) int {
 			if !exists {
 				divisors = calcDivisors(len(value))
 			}
-			utils.Debug(debug, "divisors for", value, "are", divisors)
+			// fmt.Println("divisors for", value, "are", divisors)
 
 			for _, divisor := range divisors {
 
-				utils.Debug(debug, "Checking for", value[:divisor], "ocurrences in", value)
+				// fmt.Println("Checking for", value[:divisor], "ocurrences in", value)
 				count := strings.Count(value, value[:divisor])
 
 				if count == len(value)/divisor {
 					sum += current
 
-					utils.Debug(debug, "Found", value)
+					// fmt.Println("Found", value)
 					break
 				}
 			}
