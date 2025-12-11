@@ -17,7 +17,7 @@ func GetInputFile(year, day int) string {
 	_, file, _, _ := runtime.Caller(0)
 	runtimePath := filepath.Dir(file)
 
-	inputFilePath := fmt.Sprintf("%s/../%d/%02d/input.txt", runtimePath, year, day)
+	inputFilePath := fmt.Sprintf("%s/../%d/%d/input.txt", runtimePath, year, day)
 
 	_, err := os.Stat(inputFilePath)
 	if err == nil {
